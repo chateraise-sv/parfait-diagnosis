@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>パルフェ診断（簡易版）</title>
+</head>
+<body>
+  <h1>あなたにおすすめのパルフェは？</h1>
+  <p>今日はさっぱりしたスイーツが食べたいですか？</p>
+  <button onclick="showResult('yes')">はい</button>
+  <button onclick="showResult('no')">いいえ</button>
+
+  <div id="result" style="margin-top: 20px; font-size: 20px;"></div>
+
+  <script>
+    function showResult(answer) {
+      const result = document.getElementById("result");
+      if (answer === "yes") {
+        result.innerText = "おすすめ：パイン＆オレンジパルフェ！";
+      } else {
+        result.innerText = "おすすめ：ショコラ・キャラメルパルフェ！";
+      }
+    }
+  </script>
+</body>
+</html>
