@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dessertパルフェ診断</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #fff8f2;
+      color: #333;
+      padding: 2em;
+      text-align: center;
+    }
+    h1 {
+      color: #d85c5c;
+      margin-bottom: 1em;
+    }
+    .question {
+      margin: 2em auto;
+      max-width: 600px;
+      padding: 1em;
+      border: 2px solid #ffb3b3;
+      border-radius: 10px;
+      background-color: #fff;
+    }
+    button {
+      margin: 1em;
+      padding: 0.8em 1.5em;
+      font-size: 1em;
+      background-color: #ff7f7f;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #ff4c4c;
+    }
+    .result {
+      display: none;
+      margin-top: 2em;
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #e67300;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dessertパルフェ診断</h1>
+
+  <div class="question" id="q1">
+    <p>Q1. 今日はどんな気分？</p>
+    <button onclick="next('q2', 'fruity')">さっぱりしたものが食べたい</button>
+    <button onclick="next('q2', 'rich')">濃厚な味で癒されたい</button>
+  </div>
+
+  <div class="question" id="q2" style="display:none">
+    <p>Q2. 好きなフルーツは？</p>
+    <button onclick="next('q3', 'berry')">いちごやベリー系</button>
+    <button onclick="next('q3', 'citrus')">オレンジやパイン系</button>
+  </div>
+
+  <div class="question" id="q3" style="display:none">
+    <p>Q3. 自分へのご褒美、どっちを選ぶ？</p>
+    <button onclick="showResult('berry')">甘酸っぱいスイーツ</button>
+    <button onclick="showResult('choco')">チョコレート系</button>
+  </div>
+
+  <div class="result" id="result-berry">
+    「Dessert パルフェ ベリー・ルージュ」がおすすめ！<br>
+    甘酸っぱさが魅力。あなたの元気を後押しするご褒美パルフェ！
+  </div>
+
+  <div class="result" id="result-citrus">
+    「Dessert パルフェ パイン＆オレンジ」がおすすめ！<br>
+    爽やかな柑橘の香りで、気分もリフレッシュ♪
+  </div>
+
+  <div class="result" id="result-choco">
+    「Dessert パルフェ ショコラ・キャラメル」がおすすめ！<br>
+    とろける濃厚な味わいで、心も癒されるご褒美タイムを。
+  </div>
+
+  <script>
+    function next(nextId, type) {
+      document.querySelectorAll('.question').forEach(el => el.style.display = 'none');
+      document.getElementById(nextId).style.display = 'block';
+      if (type) sessionStorage.setItem('type', type);
+    }
+
+    function showResult(flavor) {
+      document.querySelectorAll('.question').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.result').forEach(el => el.style.display = 'none');
+
+      let type = sessionStorage.getItem('type');
+      if (type === 'fruity' && flavor === 'berry') {
+        document.getElementById('result-berry').style.display = 'block';
+      } else if (type === 'fruity') {
+        document.getElementById('result-citrus').style.display = 'block';
+      } else {
+        document.getElementById('result-choco').style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>
