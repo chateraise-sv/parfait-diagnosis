@@ -5,67 +5,89 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dessertパルフェ診断</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #fff8f5; text-align: center; padding: 2em; }
-    .question { margin: 1em 0; }
-    button { padding: 0.5em 1em; margin: 0.5em; font-size: 1em; }
-    .result { font-size: 1.5em; margin-top: 2em; font-weight: bold; }
+    body { font-family: "游ゴシック", sans-serif; text-align: center; padding: 30px; background-color: #fff6f6; }
+    .question { margin-bottom: 20px; font-weight: bold; font-size: 18px; }
+    .choices button { margin: 8px; padding: 10px 20px; font-size: 16px; border-radius: 5px; border: none; background-color: #f7c6c7; cursor: pointer; }
+    .choices button:hover { background-color: #e89fa1; }
+    .result { margin-top: 30px; font-size: 20px; font-weight: bold; }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
   <h1>Dessertパルフェ診断</h1>
-  <p>3つの質問に答えて、あなたにぴったりのパルフェを見つけよう！</p>
-
-  <div id="quiz">
-    <div class="question" id="q1">
-      <p>Q1. 気分は？</p>
-      <button onclick="answer(1, 'a')">さっぱりしたい</button>
-      <button onclick="answer(1, 'b')">とにかく甘く</button>
-      <button onclick="answer(1, 'c')">ご褒美感がほしい</button>
-    </div>
-
-    <div class="question" id="q2" style="display:none;">
-      <p>Q2. 好きなフルーツは？</p>
-      <button onclick="answer(2, 'a')">ベリー系</button>
-      <button onclick="answer(2, 'b')">オレンジ・パイン</button>
-      <button onclick="answer(2, 'c')">フルーツよりチョコ</button>
-    </div>
-
-    <div class="question" id="q3" style="display:none;">
-      <p>Q3. 食べるタイミングは？</p>
-      <button onclick="answer(3, 'a')">食後にさっぱり</button>
-      <button onclick="answer(3, 'b')">仕事後のご褒美</button>
-      <button onclick="answer(3, 'c')">夜にじっくり</button>
-    </div>
-  </div>
-
-  <div class="result" id="result" style="display:none;"></div>
+  <div id="quiz"></div>
+  <div id="result" class="result hidden"></div>
 
   <script>
-    const answers = [];
+    const questions = [
+      {
+        text: "Q1. 今のあなたが求めるのは？",
+        choices: [
+          { text: "ひと息ついて気分をリセット", value: "refresh" },
+          { text: "がんばった自分にごほうびを", value: "reward" },
+          { text: "とにかく癒されたい", value: "healing" }
+        ]
+      },
+      {
+        text: "Q2. デザートに求める食感は？",
+        choices: [
+          { text: "ぷるん、つるんと軽やか", value: "fruity" },
+          { text: "とろ〜り、やさしい口どけ", value: "creamy" },
+          { text: "しっかり濃厚、満足感たっぷり", value: "rich" }
+        ]
+      },
+      {
+        text: "Q3. あなたをスイーツに例えるなら？",
+        choices: [
+          { text: "小悪魔系でちょっと刺激的", value: "type_a" },
+          { text: "癒し系でほんわか", value: "type_b" },
+          { text: "元気いっぱいポジティブ", value: "type_c" }
+        ]
+      }
+    ];
 
-    function answer(q, a) {
-      answers[q - 1] = a;
-      document.getElementById('q' + q).style.display = 'none';
-      if (q < 3) {
-        document.getElementById('q' + (q + 1)).style.display = 'block';
+    const results = {
+      "refresh_fruity_type_c": "あなたにおすすめは… Dessert パルフェ ベリー・ルージュ！\n気分をリフレッシュできる爽やかさが魅力♪",
+      "healing_creamy_type_b": "あなたにおすすめは… Dessert パルフェ パイン＆オレンジ！\nやさしい甘さで心もほぐれる癒しのひととき♪",
+      "reward_rich_type_a": "あなたにおすすめは… Dessert パルフェ ショコラ・キャラメル！\nがんばったあなたに贈る、ご褒美デザート♡",
+      "default": "あなたにぴったりのパルフェは… Dessert パルフェ ベリー・ルージュ！\nどんな気分にも寄り添う、頼れる味わいです♪"
+    };
+
+    let currentQuestion = 0;
+    let answers = [];
+
+    function showQuestion() {
+      const q = questions[currentQuestion];
+      const container = document.getElementById("quiz");
+      container.innerHTML = `<div class="question">${q.text}</div>`;
+
+      const choicesHTML = q.choices.map(choice => {
+        return `<button onclick="answerQuestion('${choice.value}')">${choice.text}</button>`;
+      }).join("<br>");
+
+      container.innerHTML += `<div class="choices">${choicesHTML}</div>`;
+    }
+
+    function answerQuestion(value) {
+      answers.push(value);
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        showQuestion();
       } else {
         showResult();
       }
     }
 
     function showResult() {
-      const result = document.getElementById('result');
-      let score = answers.join('');
-
-      if (score.includes('a') && score.includes('b')) {
-        result.textContent = 'あなたにおすすめは「Dessert パルフェ パイン＆オレンジ」！爽やかさと甘さのバランスが絶妙！';
-      } else if (score.includes('a') && score.includes('a')) {
-        result.textContent = 'あなたにおすすめは「Dessert パルフェ ベリー・ルージュ」！フルーティで気分もリフレッシュ！';
-      } else {
-        result.textContent = 'あなたにおすすめは「Dessert パルフェ ショコラ・キャラメル」！濃厚な甘さで最高のご褒美タイムを♪';
-      }
-      result.style.display = 'block';
+      const key = `${answers[0]}_${answers[1]}_${answers[2]}`;
+      const resultText = results[key] || results["default"];
+      document.getElementById("quiz").classList.add("hidden");
+      const resultDiv = document.getElementById("result");
+      resultDiv.textContent = resultText;
+      resultDiv.classList.remove("hidden");
     }
+
+    showQuestion();
   </script>
 </body>
 </html>
