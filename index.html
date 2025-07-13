@@ -21,40 +21,39 @@
   <script>
     const questions = [
       {
-        text: "Q1. 今のあなたが求めるのは？",
+        text: "Q1. 今の気分は？",
         choices: [
-          { text: "ひと息ついて気分をリセット", value: "refresh" },
-          { text: "がんばった自分にごほうびを", value: "reward" },
-          { text: "とにかく癒されたい", value: "healing" }
+          { text: "ひと息ついて気分をリセット", value: "berry" },
+          { text: "ちょっと贅沢なご褒美タイム", value: "choco" },
+          { text: "元気をチャージして頑張りたい", value: "pine" }
         ]
       },
       {
-        text: "Q2. デザートに求める食感は？",
+        text: "Q2. 気になる食感は？",
         choices: [
-          { text: "ぷるん、つるんと軽やか", value: "fruity" },
-          { text: "とろ〜り、やさしい口どけ", value: "creamy" },
-          { text: "しっかり濃厚、満足感たっぷり", value: "rich" }
+          { text: "ぷるん、つるんと軽やか", value: "pine" },
+          { text: "とろ〜り、やさしい口どけ", value: "berry" },
+          { text: "しっかり濃厚で満足感重視", value: "choco" }
         ]
       },
       {
-        text: "Q3. あなたをスイーツに例えるなら？",
+        text: "Q3. あなたの性格は？",
         choices: [
-          { text: "小悪魔系でちょっと刺激的", value: "type_a" },
-          { text: "癒し系でほんわか", value: "type_b" },
-          { text: "元気いっぱいポジティブ", value: "type_c" }
+          { text: "癒し系でほんわか", value: "pine" },
+          { text: "小悪魔系でちょっと刺激的", value: "choco" },
+          { text: "元気いっぱいポジティブ", value: "berry" }
         ]
       }
     ];
 
     const results = {
-      "refresh_fruity_type_c": "あなたにおすすめは… Dessert パルフェ ベリー・ルージュ！\n気分をリフレッシュできる爽やかさが魅力♪",
-      "healing_creamy_type_b": "あなたにおすすめは… Dessert パルフェ パイン＆オレンジ！\nやさしい甘さで心もほぐれる癒しのひととき♪",
-      "reward_rich_type_a": "あなたにおすすめは… Dessert パルフェ ショコラ・キャラメル！\nがんばったあなたに贈る、ご褒美デザート♡",
-      "default": "あなたにぴったりのパルフェは… Dessert パルフェ ベリー・ルージュ！\nどんな気分にも寄り添う、頼れる味わいです♪"
+      "berry": "あなたにおすすめは… Dessert パルフェ ベリー・ルージュ！\n気分をリフレッシュしたいあなたにぴったりの爽やかデザート♡",
+      "choco": "あなたにおすすめは… Dessert パルフェ ショコラ・キャラメル！\nごほうび気分に浸れる、濃厚で贅沢な一品♪",
+      "pine": "あなたにおすすめは… Dessert パルフェ パイン＆オレンジ！\nトロピカルな果実感が、癒しの時間を彩ります☀"
     };
 
     let currentQuestion = 0;
-    let answers = [];
+    let score = { berry: 0, choco: 0, pine: 0 };
 
     function showQuestion() {
       const q = questions[currentQuestion];
@@ -69,7 +68,7 @@
     }
 
     function answerQuestion(value) {
-      answers.push(value);
+      score[value]++;
       currentQuestion++;
       if (currentQuestion < questions.length) {
         showQuestion();
@@ -79,11 +78,10 @@
     }
 
     function showResult() {
-      const key = `${answers[0]}_${answers[1]}_${answers[2]}`;
-      const resultText = results[key] || results["default"];
+      const best = Object.entries(score).sort((a, b) => b[1] - a[1])[0][0];
       document.getElementById("quiz").classList.add("hidden");
       const resultDiv = document.getElementById("result");
-      resultDiv.textContent = resultText;
+      resultDiv.textContent = results[best];
       resultDiv.classList.remove("hidden");
     }
 
